@@ -20,8 +20,18 @@ int main(){
     while(ch!=';'){
         //check for numbers
         if(isdigit(ch)!=0){
+
             ptr[i].type=0;
             ptr[i].value=ch - '0';
+            
+            ch=getc(stdin);
+
+            while(isdigit(ch)!=0){
+                ptr[i].value=ptr[i].value*10+(ch - '0');
+                ch=getc(stdin);
+            }
+
+            ungetc(ch,stdin);
         }
         //check for operators
         else if(ch=='+' || ch=='-' || ch=='*' || ch=='/' || ch=='%' ){
@@ -40,10 +50,11 @@ int main(){
 
         }
 
-        printf("%c",ch);
+        
         ch=getc(stdin);
         i++;
     }
+
     printf("*****");
     int t=0;
     printf("\n-------------Checking!!------------------\n");
