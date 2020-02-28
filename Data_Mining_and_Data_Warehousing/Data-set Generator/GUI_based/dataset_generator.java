@@ -8,7 +8,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 class dataset_generator extends JFrame implements MouseListener{
-    PrintWriter output;
+    static PrintWriter output;
+    String ptr="";
 
     dataset_generator(){
         JFrame frame = new JFrame("Data-Point Generator");
@@ -19,13 +20,18 @@ class dataset_generator extends JFrame implements MouseListener{
         frame.setVisible(true);
     }
     
-
     public void mouseClicked(MouseEvent e) {  
         Graphics g=getGraphics();  
         g.setColor(Color.BLUE);  
         g.fillOval(e.getX(),e.getY(),10,10);
+        ptr=e.getX()+","+e.getY();
+        write_to_file();
         System.out.println(e.getX()+","+e.getY());      
     }  
+
+    public void write_to_file(){
+        output.println(ptr);
+    }
     public void mouseEntered(MouseEvent e) {}  
     public void mouseExited(MouseEvent e) {}  
     public void mousePressed(MouseEvent e) {}  
