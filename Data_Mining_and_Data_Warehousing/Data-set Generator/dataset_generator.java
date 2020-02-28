@@ -1,52 +1,58 @@
 //for filehandling
+import java.io.File;
 import java.io.IOException;
-import java.io.FileWriter;
+import java.io.PrintWriter;
 //for mouse-event-handling
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
-class dataset_generator extends Frame implements MouseListener , MouseMotionListener
-{
-    int pos_x,pos_y;
-    String str=" "; //will be replaced by a counter
+class dataset_generator extends JFrame implements MouseListener{
+    PrintWriter output;
 
-    public MouseXY()
-  {
-    addMouseListener(this);
-    addMouseMotionListener(this);
-
-    setSize(300, 300);
-    setVisible(true);
-  }
-
-  /*  public MouseStart(){
-        addMouseListener(this);
-        addMouseMotionListener(this);
-
-        setSize(300,300);
-        setVisible(true);
+    dataset_generator(){
+        JFrame frame = new JFrame("Data-Point Generator");
+        frame.addMouseListener(this);
+        frame.setSize(500, 500);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setVisible(true);
     }
-*/
-    public void mouseClicked(MouseEvent e){
-        pos_x=e.getX();
-        pos_y=e.getY();
-        str="Mouse Clicked";
-        repaint();
-    }
+    
 
-    public void paint(Graphics g){
-        g.setFont(new Font("Monospaced", Font.BOLD, 20));
-        g.fillOval(pos_x, pos_y, 10, 10);                 // gives the bullet
-        g.drawString(pos_x + "," + pos_y,  pos_x+10, pos_y -10);  // displays the x and y position
-        g.drawString(str, pos_x+10, pos_y+20);
-    }
+    public void mouseClicked(MouseEvent e) {  
+        Graphics g=getGraphics();  
+        g.setColor(Color.BLUE);  
+        g.fillOval(e.getX(),e.getY(),10,10);
+        System.out.println(e.getX()+","+e.getY());      
+    }  
+    public void mouseEntered(MouseEvent e) {}  
+    public void mouseExited(MouseEvent e) {}  
+    public void mousePressed(MouseEvent e) {}  
+    public void mouseReleased(MouseEvent e) {}
+    
+    public static void main(String[] args) throws IOException{
+        try{
+            //-------------------------------File Creation-------------------------------
+            File myObj=new File("Output_Co_Ordinates.txt");
+            if(myObj.createNewFile()){
+                System.out.println("File Created : "+myObj.getName());
+            }
+            else{
+                System.out.println("File already exists.");
+            }
+        
+            output=new PrintWriter("Output_Co_Ordinates.txt");
+            //--------------------------------------------------------------------------
 
-    public static void main(String[] args) throws IOException {
-        FileWriter fd=new FileWriter("Co_ordinates.txt");
-        System.out.println("File opened!!");
-        fd.close();
-
-        //new MouseStart();
-        new MouseXY();
-    }
+            
+            new dataset_generator();
+             
+            output.close();
+            
+           }catch (IOException e){
+            System.out.println("An error occured.");
+            e.printStackTrace();
+        }
+   }
 }
