@@ -203,30 +203,32 @@ void create_trailing_set(int n){
     trailing_set[top2++].lhs=lhs;
 
     for (; i >=0;i--){
-        printf("\nThe character is : %c\n",rhs[i]);
+        //printf("\nThe character is : %c\n",rhs[i]);
         if (check_terminal(rhs[i])){ 
-            printf("\ninto the check terminal if\n");
+            //printf("\ninto the check terminal if\n");
             add_to_set(index,1,rhs[i]);
             while (rhs[i] != '|' && i>0) i--;
         }
         else if (rhs[i]!=lhs && rhs[i] != '|'){
-            printf("\n into the else\n");
+            //printf("\n into the else\n");
             flag=0;
             for(j=0;j<top2;j++){
                    char lhs2=trailing_set[j].lhs;
                    if(rhs[i]==lhs2){
                         add_to_set_string(index,1,j);
-                        printf("\nfound %c  %c with %s",rhs[i],lhs2,leading_set[j].rhs);
+                  //      printf("\nfound %c  %c with %s",rhs[i],lhs2,leading_set[j].rhs);
                         flag=1;
                         break;
                     }
                 }
             
             if(flag==0){
-                printf("\ninto the else flag==0 \n");
+                //printf("\ninto the else flag==0 \n");
                 int production_rule_no=find_production(rhs[i],n);
                 create_trailing_set(production_rule_no);
             }
+            while (rhs[i] != '|' && i!=0)
+                     i--;
         }
     }
     printf("%s",trailing_set[index].rhs);
