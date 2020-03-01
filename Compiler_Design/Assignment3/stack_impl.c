@@ -243,7 +243,7 @@ int main(){
     top1=0;
     top2=0;
     int i;
-    
+    printf("\n----------------------------------------------------\n");
     //for the leading set
     for(i=0;i<N;i++){
         printf("\nLeading Set(%c) :",production_rules[i].lhs);
@@ -259,6 +259,6 @@ int main(){
         create_trailing_set(i);
         printf(" }\n");
     }
-    
+    printf("\n----------------------------------------------------\n");
     return 0;
 }
