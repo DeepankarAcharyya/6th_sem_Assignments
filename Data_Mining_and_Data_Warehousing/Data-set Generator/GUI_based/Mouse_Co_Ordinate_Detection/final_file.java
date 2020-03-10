@@ -7,25 +7,24 @@ import javax.swing.*;
                                     OBJECTIVES
 --- JFrame is displayed---------------------------------------------------------Done
 --- display the co-ordinates only when thte mouse is clicked--------------------Done
---- display the clicked points
+--- display the clicked points--------------------------------------------------Done
 */
 
 class final_file extends JFrame implements MouseListener{
 
  final_file(){
-    JFrame frame =new JFrame("Data-set Frame");
-       
-    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    frame.addMouseListener(this);
-
-    int width=500, height=500;
-    frame.setSize(width, height);
-    frame.setVisible(true);
+    this.addMouseListener(this);  
+    this.setSize(800,800);
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.setVisible(true);
  }
 
  public void mouseClicked(MouseEvent event){  
+    Graphics g=getGraphics();  
+    g.setColor(Color.BLUE);  
+    g.fillOval(event.getX(),event.getY(),10,10);
+        
     System.out.println("x = "+ event.getX() + " y = " + event.getY());      
-    drawPoints(event.getX(),event.getY());
 }
 
  public void mouseEntered(MouseEvent event){}
@@ -36,13 +35,6 @@ class final_file extends JFrame implements MouseListener{
 
  public void mouseReleased(MouseEvent e){
     
- }
-
- public void drawPoints(int x,int y){
-    Graphics g=getGraphics();
-    g.drawOval(x,y,x,y);  
-    g.setColor(Color.BLUE);  
-    g.fillOval(x,y,10,10); 
  }
 
  public static void main(String[] args){
