@@ -16,8 +16,8 @@ public class gui_tool extends JFrame implements MouseListener {
      }
      
      public void file_write(int x,int y) throws IOException{
-        FileWriter file=new FileWriter("Output_Co_Ordinates.txt");
-        file.write("["+x+"," + y+"]");
+        FileWriter file=new FileWriter("Output_Co_Ordinates.txt",true);
+        file.write("["+x+"," + y+"]\n");
         file.close();
      }
 
