@@ -1,0 +1,4 @@
+>Ecol_K12_MG1655:|1|thrL
+
+>Ecol_K12_MG1655:|2|thrA
+atgaaacgcattagcaccaccattaccaccaccatcaccattaccacaggtaacggtgcgggctag
