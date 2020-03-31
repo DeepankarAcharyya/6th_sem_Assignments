@@ -17,6 +17,7 @@ struct data_nodes{
     int visited;                         //1 if visited ; 0 otherwise
     struct data_nodes* neighbours[Max];  //pointer to the list of neighbours
     struct data_nodes* next;
+    int neighbour_count;                 //total number of neighbours the current data-points has
 };
 
 struct data_nodes* head_data_list; //pointer to the list of stored data-points
@@ -48,7 +49,10 @@ void input(){
         //set the initial values of cluster-ids will be -1 and core will be 0
         new_node->cluster_id=-1;
         new_node->core=0;
+
         new_node->visited=0;
+        new_node->neighbour_count=0;
+        
         //set next=Null
         new_node->next=NULL;
         //link the data-point to the prev->next
@@ -93,8 +97,11 @@ int create_eps_neighbourhood(struct data_nodes n01){
     if(neighbour_count>=min_points)
         n01.core=1;
 
+    n01.neighbour_count=neighbour_count;
+
 }
 
+//function to print the data nodes
 void print_data_point_list(){
     int i;
     struct data_nodes* head=head_data_list;
@@ -105,12 +112,29 @@ void print_data_point_list(){
         printf("\nCluster-ID: %d",head->cluster_id);
         printf("\nCore Bit Value: %d",head->core);
         printf("\nVisited Bit Value: %d",head->visited);
+        printf("\nNumber of Neighbours: %d",head->neighbour_count);
         head=head->next;
     }  
 }
 
-void density_rechable_clustering(){
+//function to assign the cluster_id to a data-node and to its neighbours
+void set_cluster_id(struct data_nodes* n01,int id){
+    int i,j;
 
+    //set the cluster_id of the current node
+    n01->cluster_id=id;    
+    j=n01->neighbour_count;
+    struct data_nodes* head=n01;
+
+    for(i=0;i<j;i++)
+        set_cluster_id(n01.neighbours[i],id);
+
+}
+
+//function to cluster together the data_nodes which are density rechable from one-another
+void density_rechable_clustering(){
+    //select a core data object
+    //if it is not clustered and not visited-> form a cluster
 }
 
 //=====================================================THE MAIN FUNCTION======================================================
