@@ -1,4 +1,6 @@
-//C program to implement DBScan
+// command to compile:g++ DBScan.cpp -o graph -lglut -lGLU -lGL
+
+//C program to implement DBScan and DBOutlier
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -311,7 +313,6 @@ int main(int argc, char *argv[]){
     
     return 0;
 }
-
 /*
                     CHARACTERISTICS OF AN OUTLIER
             - No of neighbours=0 i.e. density unreachable
