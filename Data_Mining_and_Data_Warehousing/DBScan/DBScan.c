@@ -2,12 +2,12 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
-#define Max 10
+#define Max 60
 
 //=======================================Global Variables & Data-Structures===========================================
 struct data_point{
-    int x;
-    int y;
+    float x;
+    float y;
 };
 
 struct data_nodes{
@@ -35,7 +35,8 @@ void input(){
     FILE* in;
     in=fopen("input.txt","r");
     
-    int i,x,y;
+    int i;
+    float x,y;
     struct data_nodes* prev;
     
     //first read the first line that indicate the total number of data-points available
@@ -46,7 +47,7 @@ void input(){
         //create a new data_nodes
         struct  data_nodes* new_node=(struct  data_nodes*)malloc(sizeof(struct  data_nodes));
         //read the x and y and put it in a data_point
-        fscanf(in,"%d,%d",&x,&y);
+        fscanf(in,"%f,%f",&x,&y);
         new_node->data.x=x;
         new_node->data.y=y;
         //set the initial values of cluster-ids will be -1 and core will be 0
@@ -72,7 +73,7 @@ void input(){
 }
 
 //function to calculate the distance
-float calculate_distance(int x1,int y1,int x2,int y2){
+float calculate_distance(float x1,float y1,float x2,float y2){
     float dis=pow((x1-x2),2);
     dis+=pow((y1-y2),2);
     return sqrt(dis);
@@ -82,10 +83,9 @@ float calculate_distance(int x1,int y1,int x2,int y2){
 void create_eps_neighbourhood(struct data_nodes* n01){
     //printf("\nInto the create_eps_neighbourhood() with %d and %d",n01->data.x,n01->data.y);
     
-    int neighbour_count=0;
+    int neighbour_count=0,i;
     struct data_nodes* head=head_data_list;
-    int x,y,i;
-    float distance;
+    float x,y,distance;
 
     while(head!=NULL){
         //get the x,y co-ordinates
@@ -122,7 +122,7 @@ void print_data_point_list(){
     printf("\nTotal Number of Core-Points: %d\n",no_of_core_objects);
     for(i=0;i<no_of_data_points;i++){
         printf("\n\nData Point No.: %d",i+1);
-        printf("\nx: %d y: %d",head->data.x,head->data.y);
+        printf("\nx: %f y: %f",head->data.x,head->data.y);
         printf("\nCluster-ID: %d",head->cluster_id);
         printf("\nCore Bit Value: %d",head->core);
         printf("\nVisited Bit Value: %d",head->visited);
@@ -180,8 +180,8 @@ void create_neighbourhood(){
 //=====================================================THE MAIN FUNCTION======================================================
 int main(){
     //STEP 0 :initializing the global variables
-    eps=2;
-    min_points=2;
+    eps=4;
+    min_points=4;
     cluster_id_count=-1;
     no_of_core_objects=0;
     token=0;
