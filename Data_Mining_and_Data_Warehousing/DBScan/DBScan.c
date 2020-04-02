@@ -133,7 +133,7 @@ void print_data_point_list(){
 
 //function to assign the cluster_id to a data-node and to its neighbours
 void set_cluster_id(struct data_nodes* n01,int id){
-    printf("\nEntered into the set_cluster_id()");
+    //printf("\nEntered into the set_cluster_id()");
     int i,j,prev_id;
 
     //set the cluster_id of the current node
@@ -151,12 +151,12 @@ void set_cluster_id(struct data_nodes* n01,int id){
 
 //function to cluster together the data_nodes which are density rechable from one-another
 void density_rechable_clustering(){
-    printf("\nEntered into the density_reachable_clustering()");
+    //printf("\nEntered into the density_reachable_clustering()");
     struct data_nodes* node=head_data_list;
     int i=0;
     token++;
     while(node!=NULL){
-        printf("\nEntered into the while loop with drc i=%d",i++);
+        //printf("\nEntered into the while loop with drc i=%d",i++);
         //select a core and unvisited data object
         if(node->core==1 && node->visited==0){
             //form a cluster by setting the cluster-id
@@ -183,7 +183,7 @@ int main(){
     eps=2;
     min_points=2;
     cluster_id_count=-1;
-    no_of_core_objects=-1;
+    no_of_core_objects=0;
     token=0;
 
     //STEP 1 :load the input
@@ -194,8 +194,7 @@ int main(){
     density_rechable_clustering();
     //STEP 4 :print the input
     print_data_point_list();      
-    //the data-points with cluster-id=-1 will be the outliers
-
+    printf("\n");
     return 0;
 }
 
