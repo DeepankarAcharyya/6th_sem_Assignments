@@ -32,7 +32,7 @@ int min_points;                      //the value of min-points    --------------
 int no_of_core_objects;              //keep track of the total number of core objects
 int token;                           //access token
 float maxX,maxY;                     //to keep track of the maximum value of X and Y
-
+ 
 //=====================================================Functions======================================================
 //function to take the input and store it
 void input(){
@@ -223,6 +223,19 @@ static void display(void){
 void showPoints(){
     float x,y;
     double r,g,b;
+    
+    double rgb[no_of_core_objects][3];
+    int i,id;
+
+    for(i=0;i<no_of_core_objects;i++){
+        r = rand() / double(RAND_MAX);
+        g = rand() / double(RAND_MAX);
+        b = rand() / double(RAND_MAX);
+        
+        rgb[i][0]=r;
+        rgb[i][1]=g;
+        rgb[i][2]=b;
+    }    
 
     srand(time(0));
 
@@ -231,18 +244,19 @@ void showPoints(){
     while(head!=NULL){
         x=head->data.x;
         y=head->data.y;
+        id=head->cluster_id;
 
         if(head->cluster_id==-1){
             glColor3f(0,0,0);
             drawPoint(x,y);
         }
         else{
-            r = rand() / double(RAND_MAX);
-            g = rand() / double(RAND_MAX);
-            b = rand() / double(RAND_MAX);
+            r=rgb[id][0];
+            g=rgb[id][1];
+            b=rgb[id][2];
+            
             glColor3f(r, g, b);
             drawPoint(x,y);
-            
         }
         head=head->next;
     }
@@ -303,4 +317,5 @@ int main(int argc, char *argv[]){
             - No of neighbours=0 i.e. density unreachable
             - Visited bit =0
             - cluster-ids will still be set to -1
+            - color: Black
 */
