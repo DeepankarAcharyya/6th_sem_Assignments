@@ -200,7 +200,7 @@ void showCluster(int argc, char *argv[]){
     maxX += 5;
     maxY += 5;
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutCreateWindow("Clusters");
+    glutCreateWindow("Clusters of the Data-points");
     glutDisplayFunc(display);
     glutMainLoop();
 }
@@ -233,7 +233,7 @@ void showPoints(){
         y=head->data.y;
 
         if(head->cluster_id==-1){
-            glColor3f(1,1,0);
+            glColor3f(0,0,0);
             drawPoint(x,y);
         }
         else{
