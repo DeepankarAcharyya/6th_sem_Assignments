@@ -12,11 +12,11 @@
 ">"                       {sscanf(yytext,"%s",yylval.sym); return GREATER_THAN;}
 "<"                       {sscanf(yytext,"%s",yylval.sym); return SMALLER_THAN;}
 [0-9]+                    {yylval.val=atoi(yytext); return N;}
-[a-zA-Z]+([A-Za-z0-9])*   {sscanf(yytext,"%s",yylval.name);return ID;}
-[\t|\n|\r|" "]            {printf("\nFound: %s",yytext);}
-.                         {printf("\nFound: %s",yytext);return yytext[0];}
+[a-zA-Z]+([A-Za-z0-9])*   {sscanf(yytext,"%s",yylval.name); return ID;}
+[\t|\n|\r|" "]            {;}
+.                         {printf("\nFound02: %s",yytext);return yytext[0];}
 %%
 
 int yywrap (void) {
-    return 1;
+    return 0;
 }

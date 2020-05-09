@@ -6,6 +6,8 @@
 
 void yyerror (char *s);
 
+char* newlabel();
+
 extern int yylex();
 extern int yyparse();
 extern FILE *yyin;
@@ -18,17 +20,17 @@ struct attribute_01{
    char* code;
 };
 
-struct attribute_02{
-   char* place;
-   char* code;
-};
+// struct attribute_02{
+//    char* place;
+//    char* code;
+// };
    
 %}
 
 %start A
 %union{
   struct attribute_01 *attribute_A;
-  struct attribute_02 *attribute_CM;
+  //struct attribute_02 *attribute_CM;
   char name[20];
   int val;
   char *code;
@@ -38,8 +40,7 @@ struct attribute_02{
 %token RWHILE EQUAL GREATER_THAN SMALLER_THAN N ID TRUE FALSE NOT EPSILON
 
 %type  <attribute_A> A
-%type  <attribute_CM> C M
-%type  <name> ID
+%type  <name> ID C M
 %type  <val>  N
 %type  <code> S
 %type  <sym>  R
@@ -52,7 +53,7 @@ struct attribute_02{
 
 %%
 
-A : RWHILE '('C')' '{'S'}'
+A : RWHILE '('C')' '{' S '}'
     {
       printf("\nSTART");
       printf("\nValid string\n");
@@ -61,11 +62,11 @@ A : RWHILE '('C')' '{'S'}'
   ;
 C : ID R ID
     {
-      printf("\nits ID R ID");
+      printf("\nits ID R ID \n");
     }
     | ID R N
     {
-      printf("\nits ID R N");
+      printf("\nits ID R N \n");
     }
     | TRUE
     {
@@ -104,31 +105,41 @@ S : ID '=' M ';' S
   ;
 M : M'+'M
   {
-    printf("\nM+M");
+    char * label=newlabel();
+    printf("\n %s = %s + %s ;",label,$1,$3);
+    strcpy($$,label);
   }
   | M'*'M
   {
-    printf("\nM*M");
+    char * label=newlabel();
+    printf("\n %s = %s * %s ;",label,$1,$3);
+    strcpy($$,label);
   }
   | M'-'M
   {
-    printf("\nM-M");
+    char * label=newlabel();
+    printf("\n %s = %s - %s ;",label,$1,$3);
+    strcpy($$,label);
   }
   | M'/'M
   {
-    printf("\nM/M");
+    char * label=newlabel();
+    printf("\n %s = %s / %s ;",label,$1,$3);
+    strcpy($$,label);
   } 
   | '('M')'
   {
-    printf("\nM");
+    strcpy($$,$2);
   }
   | ID
   {
-    printf("\nID");
+    strcpy($$,$1);
   }
   | N
   {
-    printf("\nN");
+    char * label=newlabel();
+    printf("\n %s = %d ;",label,$1);
+    strcpy($$,label);
   }
   ;
 
@@ -138,6 +149,14 @@ void yyerror(char *s){
   printf("\nInvalid String!! nable to parse!!\n");
   fprintf(stderr,"%s\n",s);
   exit(1);
+}
+
+char* newlabel(){
+  char *label=(char *)malloc(6*sizeof(char));
+  label_count++;
+  sprintf(label,"L%d",label_count);
+  printf("\nNew label:%s\n",label);
+  return label;
 }
 
 int main(void) {
