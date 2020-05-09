@@ -14,7 +14,7 @@
 [0-9]+                    {yylval.val=atoi(yytext); return N;}
 [a-zA-Z]+([A-Za-z0-9])*   {sscanf(yytext,"%s",yylval.name); return ID;}
 [\t|\n|\r|" "]            {;}
-.                         {printf("\nFound02: %s",yytext);return yytext[0];}
+.                         {return yytext[0];}
 %%
 
 int yywrap (void) {

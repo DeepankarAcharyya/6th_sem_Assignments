@@ -6,13 +6,13 @@
 
 void yyerror (char *s);
 
-char* newlabel();
+char* newtempt();
 
 extern int yylex();
 extern int yyparse();
 extern FILE *yyin;
 
-int temp_count=0,label_count=0;
+int tempt_count=0,label_count=0;
 
 struct attribute_01{
    char* begin;
@@ -83,20 +83,23 @@ C : ID R ID
   ;
 R : EQUAL
   {
-    printf("\nEQUAL encountered!!");
+   // printf("\n %s",yylval.sym);
+    strcpy($$,yylval.sym);
   }
   | GREATER_THAN
   {
-    printf("\nGT encountered!!");
+   // printf("\n %s",yylval.sym);
+    strcpy($$,yylval.sym);
   }
   | SMALLER_THAN
   {
-    printf("\nST encountered!!");
+   // printf("\n %s",yylval.sym);
+    strcpy($$,yylval.sym);
   }
   ;
 S : ID '=' M ';' S
   {
-    printf("\n Id=M ");
+    printf("\n %s = %s ;",$1,$3);
   }
   | EPSILON
   {
@@ -105,27 +108,27 @@ S : ID '=' M ';' S
   ;
 M : M'+'M
   {
-    char * label=newlabel();
-    printf("\n %s = %s + %s ;",label,$1,$3);
-    strcpy($$,label);
+    char * tempt=newtempt();
+    printf("\n %s = %s + %s ;",tempt,$1,$3);
+    strcpy($$,tempt);
   }
   | M'*'M
   {
-    char * label=newlabel();
-    printf("\n %s = %s * %s ;",label,$1,$3);
-    strcpy($$,label);
+    char * tempt=newtempt();
+    printf("\n %s = %s * %s ;",tempt,$1,$3);
+    strcpy($$,tempt);
   }
   | M'-'M
   {
-    char * label=newlabel();
-    printf("\n %s = %s - %s ;",label,$1,$3);
-    strcpy($$,label);
+    char * tempt=newtempt();
+    printf("\n %s = %s - %s ;",tempt,$1,$3);
+    strcpy($$,tempt);
   }
   | M'/'M
   {
-    char * label=newlabel();
-    printf("\n %s = %s / %s ;",label,$1,$3);
-    strcpy($$,label);
+    char * tempt=newtempt();
+    printf("\n %s = %s / %s ;",tempt,$1,$3);
+    strcpy($$,tempt);
   } 
   | '('M')'
   {
@@ -137,9 +140,9 @@ M : M'+'M
   }
   | N
   {
-    char * label=newlabel();
-    printf("\n %s = %d ;",label,$1);
-    strcpy($$,label);
+    char * tempt=newtempt();
+    printf("\n %s = %d ;",tempt,$1);
+    strcpy($$,tempt);
   }
   ;
 
@@ -151,12 +154,11 @@ void yyerror(char *s){
   exit(1);
 }
 
-char* newlabel(){
-  char *label=(char *)malloc(6*sizeof(char));
-  label_count++;
-  sprintf(label,"L%d",label_count);
-  printf("\nNew label:%s\n",label);
-  return label;
+char* newtempt(){
+  char *tempt=(char *)malloc(6*sizeof(char));
+  tempt_count++;
+  sprintf(tempt,"T%d",tempt_count);
+  return tempt;
 }
 
 int main(void) {
