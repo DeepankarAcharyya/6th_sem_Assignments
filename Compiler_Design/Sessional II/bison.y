@@ -19,11 +19,6 @@ int tempt_count=0,label_count=0,start_count=0;
 
 int flag=0;
 
-struct code{
-  char name[20];
-  int not_flag;
-};
-
 %}
 
 %start A
@@ -56,83 +51,94 @@ A : RWHILE '(' C ')' '{' S '}'
       flag=0;
       printf("\n goto %s ; \n %s : ",begin,end);
       printf("\n********SUCCESSFULLY PARSED*********\n");
+      flag=0;
       $$=1;
     }
   ;
 C : ID R ID
     {
-      if(flag==0){
-        char * begin = initialize(++start_count);
-        flag=1;
-        printf("\n%s : ",begin);
-      }
+      char * begin = initialize(++start_count);
+      printf("\n%s : ",begin);
+  
       char * tempt=newtempt();
       printf(" %s = %s %s %s;",tempt,$1,$2,$3);
       char * end=terminate(start_count);
-      printf("\n if %s == False goto %s ;",tempt,end);
+      
+      if(flag==0)
+          printf("\n if %s == False goto %s ;",tempt,end);
+      else{
+          char * tempt2=newtempt();
+          printf("\n %s = ~ ( %s );",tempt2,tempt);
+          printf("\n if %s == False goto %s ;",tempt2,end);
+      }
+
       strcpy($$,tempt);
     }
     | ID R N
     {
-      if(flag==0){
-        char * begin = initialize(++start_count);
-        flag=1;
-        printf("\n%s : ",begin);
-      }
+      char * begin = initialize(++start_count);
+      printf("\n%s : ",begin);
       
       char * tempt=newtempt();
       printf(" %s = %s %s %d;",tempt,$1,$2,$3);
       char * end=terminate(start_count);
-      printf("\n if %s == False goto %s ;",tempt,end);
+      
+      if(flag==0)
+          printf("\n if %s == False goto %s ;",tempt,end);
+      else{
+          char * tempt2=newtempt();
+          printf("\n %s = ~ ( %s );",tempt2,tempt);
+          printf("\n if %s == False goto %s ;",tempt2,end);
+      }
+      
       strcpy($$,tempt);
     }
     | TRUE
     {
-      if(flag==0){
-        char * begin = initialize(++start_count);
-        printf("\n%s : ",begin);
-        flag=1;
-      }
-
+      
+      char * begin = initialize(++start_count);
+      printf("\n%s : ",begin);
+        
       char * tempt=newtempt();
       char * end=terminate(start_count);
       
-        printf(" %s = True ;",tempt);
-        printf("\n if %s == False goto %s ;",tempt,end);
-        
+      printf(" %s = True ;",tempt);
+      
+      if(flag==0)
+          printf("\n if %s == False goto %s ;",tempt,end);
+      else{
+          char * tempt2=newtempt();
+          printf("\n %s = ~ ( %s );",tempt2,tempt);
+          printf("\n if %s == False goto %s ;",tempt2,end);
+      }
+
       strcpy($$,tempt);
     }
     | FALSE
     {
-      if(flag==0){
-        char * begin = initialize(++start_count);
-        printf("\n%s : ",begin);
-        flag=1;
-      }
       
+      char * begin = initialize(++start_count);
+      printf("\n%s : ",begin);
+        
       char * tempt=newtempt();
       char * end=terminate(start_count);
 
-      
-        printf(" %s = False ;",tempt);
-        printf("\n if %s == False goto %s ;",tempt,end);
-      
+      printf(" %s = False ;",tempt);
+        
+      if(flag==0)
+          printf("\n if %s == False goto %s ;",tempt,end);
+      else{
+          char * tempt2=newtempt();
+          printf("\n %s = ~ ( %s );",tempt2,tempt);
+          printf("\n if %s == False goto %s ;",tempt2,end);
+      }
+
       strcpy($$,tempt);
     }
     | NOT C
      {
-      if(flag==0){
-        char * begin = initialize(++start_count);
-        printf("\n%s : ",begin);
-        flag=1;
-      }
-
-      char * tempt=newtempt();
-      printf(" %s = ~ ( %s ) ;",tempt,$2);
-      char * end=terminate(start_count);
-      printf("\n if %s == False goto %s ;",tempt,end);
-      strcpy($$,tempt);
-    }
+        flag=0;
+     }
   ;
 R : EQUAL
   {
