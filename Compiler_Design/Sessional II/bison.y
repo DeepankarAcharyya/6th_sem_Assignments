@@ -3,12 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "lex.yy.c"
-//char* newlabel();
-//char* newtemp();
-//char* generate();
-void yyerror (char *s);
 
+void yyerror (char *s);
 
 extern int yylex();
 extern int yyparse();
@@ -36,7 +32,7 @@ struct attribute_02{
   char name[20];
   int val;
   char *code;
-  char sym[20];
+  char sym[3];
 }
 
 %token RWHILE EQUAL GREATER_THAN SMALLER_THAN N ID TRUE FALSE NOT EPSILON
@@ -59,6 +55,8 @@ struct attribute_02{
 A : RWHILE '('C')' '{'S'}'
     {
       printf("\nSTART");
+      printf("\nValid string\n");
+      exit(0);
     }
   ;
 C : ID R ID
@@ -95,7 +93,7 @@ R : EQUAL
     printf("\nST encountered!!");
   }
   ;
-S : ID '=' M ';'
+S : ID '=' M ';' S
   {
     printf("\n Id=M ");
   }
@@ -135,46 +133,26 @@ M : M'+'M
   ;
 
 %%
-// char *newlabel(){
-// 	char *label = (char *)malloc(10*sizeof(char));
-// 	strcpy(label,"L");
-// 	label_count++;
-//   sprintf(labelArray,"%d",label_count);
-// 	emit(label,labelArray);	
-	
-// 	return label;
-// }
 
-// char * newtemp(){
-// 	char *newTemp = (char *)malloc(30);
-// 	strcpy(newTemp,"t");
-// 	sprintf(numberArray,"%d",n);
-// 	emit(newTemp,numberArray);
-// 	n++;
-// 	return newTemp;
-// }
+void yyerror(char *s){
+  printf("\nInvalid String!! nable to parse!!\n");
+  fprintf(stderr,"%s\n",s);
+  exit(1);
+}
 
 int main(void) {
-    // int argc, char *argv[]
-    // if(argc < 2) {
-    //     printf("Kindly provide the file name.\n like ./a.out file_name.c\n\n");
-    //     exit(1);
-    // }
     
-    // FILE *f1 = fopen(argv[1], "r");
-    
-    FILE *f1 =fopen("csb7017_input.c","r");
-	  // if (!f1) {
-		//   printf("Cannot open file");
-		//   exit(1);
-	  // }
-
-	  yyin = f1;
-    yyparse();
-
+    FILE *f1;
+     
+	  if (f1=fopen("input.c","r")) {
+		   printf("\nfile opened!\n");
+       yyin = f1;
+       yyparse();
+     }
+    else{
+      printf("\ncannot opened the file\n");
+      exit(1);
+    }
+	  
     return 0;
-}
-  
-void yyerror(char *s){
-  fprintf(stderr,"%s\n",s);
 }
