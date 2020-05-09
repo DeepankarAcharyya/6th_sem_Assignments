@@ -7,6 +7,7 @@
 void yyerror (char *s);
 
 char* newtempt();
+char* newlabel();
 
 extern int yylex();
 extern int yyparse();
@@ -30,7 +31,6 @@ struct attribute_01{
 %start A
 %union{
   struct attribute_01 *attribute_A;
-  //struct attribute_02 *attribute_CM;
   char name[20];
   int val;
   char *code;
@@ -174,6 +174,13 @@ char* newtempt(){
   tempt_count++;
   sprintf(tempt,"T%d",tempt_count);
   return tempt;
+}
+
+char* newlabel(){
+  char *label=(char *)malloc(10*sizeof(char));
+  label_count++;
+  sprintf(label,"Label%d",tempt_count);
+  return label;
 }
 
 int main(void) {
