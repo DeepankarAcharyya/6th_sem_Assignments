@@ -8,12 +8,14 @@ void yyerror (char *s);
 
 char* newtempt();
 char* newlabel();
+char* initialize(int i);
+char* terminate(int i);
 
 extern int yylex();
 extern int yyparse();
 extern FILE *yyin;
 
-int tempt_count=0,label_count=0;
+int tempt_count=0,label_count=0,start_count=0;
 
 struct attribute_01{
    char* begin;
@@ -21,11 +23,6 @@ struct attribute_01{
    char* code;
 };
 
-// struct attribute_02{
-//    char* place;
-//    char* code;
-// };
-   
 %}
 
 %start A
@@ -53,46 +50,41 @@ struct attribute_01{
 
 %%
 
-A : RWHILE '('C')' '{' S '}'
-    {
-      printf("\nSTART");
-      printf("\nValid string\n");
-      exit(0);
-    }
+A : RWHILE {char * begin=initialize(++start_count);printf("\n %s :",begin);} '('C')' '{' S '}' {char * end=terminate(start_count);printf("\n %s :",end);}
   ;
 C : ID R ID
     {
       //printf("\nits ID R ID \n");
       char * tempt=newtempt();
-      printf("\n %s = %s %s %s;",tempt,$1,$2,$3);
+      printf(" %s = %s %s %s;",tempt,$1,$2,$3);
       strcpy($$,tempt);
     }
     | ID R N
     {
       //printf("\nits ID R N \n");
       char * tempt=newtempt();
-      printf("\n %s = %s %s %d;",tempt,$1,$2,$3);
+      printf(" %s = %s %s %d;",tempt,$1,$2,$3);
       strcpy($$,tempt);
     }
     | TRUE
     {
       //printf("\nits TRUE \n");
       char * tempt=newtempt();
-      printf("\n %s = True ;",tempt);
+      printf(" %s = True ;",tempt);
       strcpy($$,tempt);
     }
     | FALSE
     {
       //printf("\nits FALSE \n");
       char * tempt=newtempt();
-      printf("\n %s = False ;",tempt);
+      printf(" %s = False ;",tempt);
       strcpy($$,tempt);
     }
     | NOT C
     {
       //printf("\nits Not C \n");
       char * tempt=newtempt();
-      printf("\n %s = ~ %s ;",tempt,$2);
+      printf(" %s = ~ %s ;",tempt,$2);
       strcpy($$,tempt);
     }
   ;
@@ -118,7 +110,7 @@ S : ID '=' M ';' S
   }
   | EPSILON
   {
-    printf("\n EPSILON encountered!!");
+    //printf("\n EPSILON encountered!!");
   }
   ;
 M : M'+'M
@@ -183,12 +175,24 @@ char* newlabel(){
   return label;
 }
 
+char* initialize(int i){
+  char *label=(char *)malloc(10*sizeof(char));
+  sprintf(label,"START%d",i);
+  return label;
+}
+
+char* terminate(int i){
+  char *label=(char *)malloc(10*sizeof(char));
+  sprintf(label,"END%d",i);
+  return label;
+}
+
 int main(void) {
     
     FILE *f1;
      
 	  if (f1=fopen("input.c","r")) {
-		   printf("\nfile opened!\n");
+		   //printf("\nfile opened!\n");
        yyin = f1;
        yyparse();
      }
