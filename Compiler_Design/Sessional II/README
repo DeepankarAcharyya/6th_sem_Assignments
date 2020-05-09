@@ -2,13 +2,11 @@ Step 1: Compile lex file with flex command
     eg: $ flex lex.l
     It will generate a c file named lex.yy.c
 Step 2: Compile bison file biosn command
-    eg: $ bison bison.y
+    eg: $ bison bison.y -d
     It will generate a c file named bison.tab.c
 Step 3: Compile the bison.tab.c with gcc or cc compiler with extension -ll and -ly
-    eg: $ cc bison.tab.c -ll -ly -w
-    It will generate the binary file named a.out
+    eg: $ gcc lex.yy.c bison.tab.c -ll -o output
+    It will generate the binary file named output
 
 Step 4: How to use it?
-    eg: $ ./a.out input.c
-    Write your program in an input file and pass it as command line argument.
-
+    eg: $ ./output
