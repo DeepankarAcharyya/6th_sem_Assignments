@@ -18,6 +18,12 @@ extern FILE *yyin;
 int tempt_count=0,label_count=0,start_count=0;
 
 int flag=0;
+
+struct code{
+  char name[20];
+  int not_flag;
+};
+
 %}
 
 %start A
@@ -49,7 +55,7 @@ A : RWHILE '(' C ')' '{' S '}'
       char * begin=initialize(start_count);
       flag=0;
       printf("\n goto %s ; \n %s : ",begin,end);
-      printf("\n");
+      printf("\n********SUCCESSFULLY PARSED*********\n");
       $$=1;
     }
   ;
@@ -84,40 +90,45 @@ C : ID R ID
     {
       if(flag==0){
         char * begin = initialize(++start_count);
-        flag=1;
         printf("\n%s : ",begin);
+        flag=1;
       }
-      
+
       char * tempt=newtempt();
-      printf(" %s = True ;",tempt);
       char * end=terminate(start_count);
-      printf("\n if %s == False goto %s ;",tempt,end);
+      
+        printf(" %s = True ;",tempt);
+        printf("\n if %s == False goto %s ;",tempt,end);
+        
       strcpy($$,tempt);
     }
     | FALSE
     {
       if(flag==0){
         char * begin = initialize(++start_count);
-        flag=1;
         printf("\n%s : ",begin);
+        flag=1;
       }
       
       char * tempt=newtempt();
-      printf(" %s = False ;",tempt);
       char * end=terminate(start_count);
-      printf("\n if %s == False goto %s ;",tempt,end);
+
+      
+        printf(" %s = False ;",tempt);
+        printf("\n if %s == False goto %s ;",tempt,end);
+      
       strcpy($$,tempt);
     }
     | NOT C
-    {
+     {
       if(flag==0){
         char * begin = initialize(++start_count);
-        flag=1;
         printf("\n%s : ",begin);
+        flag=1;
       }
 
       char * tempt=newtempt();
-      printf(" %s = ~ %s ;",tempt,$2);
+      printf(" %s = ~ ( %s ) ;",tempt,$2);
       char * end=terminate(start_count);
       printf("\n if %s == False goto %s ;",tempt,end);
       strcpy($$,tempt);
@@ -192,8 +203,8 @@ M : M'+'M
 %%
 
 void yyerror(char *s){
-  printf("\nInvalid String!! unable to parse!!\n");
-  fprintf(stderr,"%s\n",s);
+  printf("\n\n\n\n\n\nInvalid String!! unable to parse!!\n");
+  fprintf(stderr,"%s\n\n\n\n",s);
   exit(1);
 }
 
