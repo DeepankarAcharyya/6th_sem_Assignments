@@ -17,29 +17,23 @@ extern FILE *yyin;
 
 int tempt_count=0,label_count=0,start_count=0;
 
-struct attribute_01{
-   char* begin;
-   char* after;
-   char* code;
-};
-
+int flag=0;
 %}
 
 %start A
+
 %union{
-  struct attribute_01 *attribute_A;
   char name[20];
   int val;
-  char *code;
   char sym[3];
 }
 
-%token RWHILE EQUAL GREATER_THAN SMALLER_THAN N ID TRUE FALSE NOT EPSILON
+%token RWHILE EQUAL GREATER_THAN SMALLER_THAN N ID TRUE FALSE NOT 
 
-%type  <attribute_A> A
+%type  <val> A
 %type  <name> ID C M
 %type  <val>  N
-%type  <code> S
+%type  <val> S
 %type  <sym>  R
 
 %right  '='
@@ -49,42 +43,83 @@ struct attribute_01{
 %right  '('
 
 %%
-
-A : RWHILE {char * begin=initialize(++start_count);printf("\n %s :",begin);} '('C')' '{' S '}' {char * end=terminate(start_count);printf("\n %s :",end);}
+A : RWHILE '(' C ')' '{' S '}' 
+    {
+      char * end=terminate(start_count);
+      char * begin=initialize(start_count);
+      flag=0;
+      printf("\n goto %s ; \n %s : ",begin,end);
+      printf("\n");
+      $$=1;
+    }
   ;
 C : ID R ID
     {
-      //printf("\nits ID R ID \n");
+      if(flag==0){
+        char * begin = initialize(++start_count);
+        flag=1;
+        printf("\n%s : ",begin);
+      }
       char * tempt=newtempt();
       printf(" %s = %s %s %s;",tempt,$1,$2,$3);
+      char * end=terminate(start_count);
+      printf("\n if %s == False goto %s ;",tempt,end);
       strcpy($$,tempt);
     }
     | ID R N
     {
-      //printf("\nits ID R N \n");
+      if(flag==0){
+        char * begin = initialize(++start_count);
+        flag=1;
+        printf("\n%s : ",begin);
+      }
+      
       char * tempt=newtempt();
       printf(" %s = %s %s %d;",tempt,$1,$2,$3);
+      char * end=terminate(start_count);
+      printf("\n if %s == False goto %s ;",tempt,end);
       strcpy($$,tempt);
     }
     | TRUE
     {
-      //printf("\nits TRUE \n");
+      if(flag==0){
+        char * begin = initialize(++start_count);
+        flag=1;
+        printf("\n%s : ",begin);
+      }
+      
       char * tempt=newtempt();
       printf(" %s = True ;",tempt);
+      char * end=terminate(start_count);
+      printf("\n if %s == False goto %s ;",tempt,end);
       strcpy($$,tempt);
     }
     | FALSE
     {
-      //printf("\nits FALSE \n");
+      if(flag==0){
+        char * begin = initialize(++start_count);
+        flag=1;
+        printf("\n%s : ",begin);
+      }
+      
       char * tempt=newtempt();
       printf(" %s = False ;",tempt);
+      char * end=terminate(start_count);
+      printf("\n if %s == False goto %s ;",tempt,end);
       strcpy($$,tempt);
     }
     | NOT C
     {
-      //printf("\nits Not C \n");
+      if(flag==0){
+        char * begin = initialize(++start_count);
+        flag=1;
+        printf("\n%s : ",begin);
+      }
+
       char * tempt=newtempt();
       printf(" %s = ~ %s ;",tempt,$2);
+      char * end=terminate(start_count);
+      printf("\n if %s == False goto %s ;",tempt,end);
       strcpy($$,tempt);
     }
   ;
@@ -104,13 +139,14 @@ R : EQUAL
     strcpy($$,yylval.sym);
   }
   ;
-S : ID '=' M ';' S
-  {
-    printf("\n %s = %s ;",$1,$3);
+S : /* empty */ 
+  { 
+    $$=1;
   }
-  | EPSILON
+  |  ID '=' M ';' S
   {
-    //printf("\n EPSILON encountered!!");
+    $$=$5;
+    printf("\n %s = %s ;",$1,$3);
   }
   ;
 M : M'+'M
@@ -156,7 +192,7 @@ M : M'+'M
 %%
 
 void yyerror(char *s){
-  printf("\nInvalid String!! nable to parse!!\n");
+  printf("\nInvalid String!! unable to parse!!\n");
   fprintf(stderr,"%s\n",s);
   exit(1);
 }
@@ -192,7 +228,6 @@ int main(void) {
     FILE *f1;
      
 	  if (f1=fopen("input.c","r")) {
-		   //printf("\nfile opened!\n");
        yyin = f1;
        yyparse();
      }
