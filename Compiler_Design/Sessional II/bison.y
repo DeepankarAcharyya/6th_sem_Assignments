@@ -62,23 +62,38 @@ A : RWHILE '('C')' '{' S '}'
   ;
 C : ID R ID
     {
-      printf("\nits ID R ID \n");
+      //printf("\nits ID R ID \n");
+      char * tempt=newtempt();
+      printf("\n %s = %s %s %s;",tempt,$1,$2,$3);
+      strcpy($$,tempt);
     }
     | ID R N
     {
-      printf("\nits ID R N \n");
+      //printf("\nits ID R N \n");
+      char * tempt=newtempt();
+      printf("\n %s = %s %s %d;",tempt,$1,$2,$3);
+      strcpy($$,tempt);
     }
     | TRUE
     {
-      printf("\nits TRUE");
+      //printf("\nits TRUE \n");
+      char * tempt=newtempt();
+      printf("\n %s = True ;",tempt);
+      strcpy($$,tempt);
     }
     | FALSE
     {
-      printf("\nits FALSE");
+      //printf("\nits FALSE \n");
+      char * tempt=newtempt();
+      printf("\n %s = False ;",tempt);
+      strcpy($$,tempt);
     }
     | NOT C
     {
-      printf("\nits NOT C");
+      //printf("\nits Not C \n");
+      char * tempt=newtempt();
+      printf("\n %s = ~ %s ;",tempt,$2);
+      strcpy($$,tempt);
     }
   ;
 R : EQUAL
