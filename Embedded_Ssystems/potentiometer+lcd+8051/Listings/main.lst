@@ -1,0 +1,163 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/10/2020 21:54:52 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          # include<reg51.h>
+   2          #include<stdio.h>
+   3          
+   4          sbit ale=P3^3;  
+   5          sbit oe=P3^6; 
+   6          sbit sc=P3^4; 
+   7          sbit eoc=P3^5;  
+   8          sbit clk=P3^7;  
+   9          
+  10          sbit ADDA=P3^0;  
+  11          sbit ADDB=P3^1;
+  12          sbit ADDC=P3^2;
+  13          
+  14          sbit rs=P2^0;
+  15          sbit rw=P2^2;
+  16          sbit en=P2^1;
+  17          
+  18          
+  19          #define lcdport P2  //lcd 
+  20          #define input_port P1  //ADC
+  21          
+  22          int result[3];
+  23          int number;
+  24          
+  25          void timer0() interrupt 1  {
+  26   1        // Function to generate clock of frequency 500KHZ using Timer 0 interrupt.
+  27   1        clk=~clk;
+  28   1      }
+  29          
+  30          void delay(unsigned int count)  {
+  31   1        int i,j;
+  32   1        for(i=0;i<count;i++)
+  33   1          for(j=0;j<300;j++);
+  34   1      }
+  35          
+  36          void daten(){
+  37   1          rs=1;
+  38   1          rw=0;
+  39   1          en=1;
+  40   1          delay(1);
+  41   1          en=0;
+  42   1      }
+  43          
+  44          void lcd_data(unsigned char ch){
+  45   1          lcdport=ch & 0xF0;
+  46   1          daten();
+  47   1          lcdport=ch<<4 & 0xF0;
+  48   1          daten();
+  49   1      }
+  50          
+  51          void cmden(void){
+  52   1          rs=0;
+  53   1          en=1;
+  54   1          delay(1);
+C51 COMPILER V9.60.0.0   MAIN                                                              06/10/2020 21:54:52 PAGE 2   
+
+  55   1          en=0;
+  56   1      }
+  57          
+  58          void lcdcmd(unsigned char ch){
+  59   1          lcdport=ch & 0xf0;
+  60   1          cmden();
+  61   1          lcdport=ch<<4 & 0xF0;
+  62   1          cmden();
+  63   1      }
+  64          
+  65          void lcdprint(unsigned char *str){
+  66   1          while(*str){
+  67   2              lcd_data(*str);
+  68   2              str++;
+  69   2          }
+  70   1      }
+  71          
+  72          void lcd_ini(){
+  73   1          lcdcmd(0x02);
+  74   1          lcdcmd(0x28);
+  75   1          lcdcmd(0x0e);
+  76   1          lcdcmd(0x01);
+  77   1          lcdcmd(0x0c);
+  78   1      }
+  79          
+  80          void show(){ 
+  81   1         sprintf(result,"%d",number);
+*** WARNING C182 IN LINE 81 OF main.c: pointer to different objects
+  82   1         lcdprint(result);
+*** WARNING C182 IN LINE 82 OF main.c: pointer to different objects
+  83   1         lcdprint("  ");
+  84   1      }
+  85          
+  86          void read_adc(){
+  87   1         number=0;
+  88   1         ale=1;
+  89   1         sc=1;
+  90   1         delay(1);
+  91   1         ale=0;
+  92   1         sc=0;
+  93   1         while(eoc==1);
+  94   1         while(eoc==0);
+  95   1         oe=1;
+  96   1         number=input_port;
+  97   1         delay(1);
+  98   1         oe=0;
+  99   1      }
+ 100          
+ 101          void adc(){
+ 102   1          ADDC=0;
+ 103   1          ADDB=0;
+ 104   1          ADDA=0;
+ 105   1          lcdcmd(0xc0);   //starting of the 2nd line
+ 106   1          read_adc();
+ 107   1          show();
+ 108   1      }
+ 109          
+ 110          void main(){
+ 111   1        eoc=1;
+ 112   1        ale=0;
+ 113   1        oe=0;
+ 114   1        sc=0;
+C51 COMPILER V9.60.0.0   MAIN                                                              06/10/2020 21:54:52 PAGE 3   
+
+ 115   1        TMOD=0x02;
+ 116   1        TH0=0xFD;
+ 117   1        
+ 118   1        lcd_ini();
+ 119   1        lcdcmd(192);
+ 120   1        //delay(500);
+ 121   1        lcdcmd(1);
+ 122   1        lcdcmd(192);
+ 123   1        //delay(500);
+ 124   1        lcdcmd(1);
+ 125   1        lcdprint("Reading : ");
+ 126   1        IE=0x82;
+ 127   1        TR0=1;
+ 128   1        
+ 129   1        while(1){
+ 130   2           adc();
+ 131   2           number=0;
+ 132   2        }
+ 133   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    305    ----
+   CONSTANT SIZE    =     17    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)
