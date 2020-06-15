@@ -1,0 +1,4 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj" 
+TO ".\Objects\potentiometer_lcd_display" 
+PRINT(".\Listings\potentiometer_lcd_display.m51") RAMSIZE(256) 

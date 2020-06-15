@@ -1,0 +1,182 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/16/2020 13:10:06 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          
+   3          sbit RowA = P1 ^ 0; //RowA
+   4          sbit RowB = P1 ^ 1; //RowB
+   5          sbit RowC = P1 ^ 2; //RowC
+   6          sbit RowD = P1 ^ 3; //RowD
+   7          
+   8          sbit C1 = P1 ^ 4; //Column1
+   9          sbit C2 = P1 ^ 5; //Column2
+  10          sbit C3 = P1 ^ 6; //Column3
+  11          sbit C4 = P1 ^ 7; //Column4
+  12          
+  13          sbit E = P3 ^ 6;  //E pin for LCD
+  14          sbit RS = P3 ^ 7; //RS pin for LCD
+  15          
+  16          void init(void)
+  17          {
+  18   1          P0 = 0x00; //not used
+  19   1          P1 = 0xf0; //used for generating outputs and taking inputs from Keypad
+  20   1          P2 = 0x00; //used as data port for LCD
+  21   1          P3 = 0x00; //used for RS and E
+  22   1      }
+  23          
+  24          void delay(int a)
+  25          {
+  26   1          int i,j;
+  27   1          for (i = 0; i < a; i++)
+  28   1              for (j = 0; j < 112; j++);
+  29   1      }
+  30          
+  31          void writedata(char t)
+  32          {
+  33   1          RS = 1; // This is data
+  34   1          P2 = t; //Data transfer
+  35   1          E = 1;  // => E = 1
+  36   1          delay(5);
+  37   1          E = 0; // => E = 0
+  38   1          delay(5);
+  39   1      }
+  40          
+  41          void send_msg(char *msg)
+  42          {
+  43   1          int i = 0;
+  44   1          while (msg[i] != '\0')
+  45   1          {
+  46   2              writedata(msg[i]);
+  47   2              i++;
+  48   2          }
+  49   1      }
+  50          
+  51          void writecmd(int z)
+  52          {
+  53   1          RS = 0; // This is command
+  54   1          P2 = z; //Data transfer
+C51 COMPILER V9.60.0.0   MAIN                                                              06/16/2020 13:10:06 PAGE 2   
+
+  55   1          E = 1;  // => E = 1
+  56   1          delay(100);
+  57   1          E = 0; // => E = 0
+  58   1          delay(100);
+  59   1      }
+  60          
+  61          void lcd_init(void)
+  62          {
+  63   1          writecmd(0x38); //function set
+  64   1          writecmd(0x0c); //display on,cursor off,blink off
+  65   1          writecmd(0x01); //clear display
+  66   1          writecmd(0x06); //entry mode, set increment
+  67   1          writecmd(0x80); //force cursor to beginning of first line
+  68   1      }
+  69          
+  70          int read_keypad(void)
+  71          {
+  72   1          RowA = 0;
+  73   1          RowB = 1;
+  74   1          RowC = 1;
+  75   1          RowD = 1; //Test Row A
+  76   1      
+  77   1          if (C1 == 0) { delay(50); while (C1 == 0); return 7; }
+  78   1          if (C2 == 0) { delay(50); while (C2 == 0); return 8; }
+  79   1          if (C3 == 0) { delay(50); while (C3 == 0); return 9; }
+  80   1          if (C4 == 0) { delay(50); while (C4 == 0); return 10; } // div
+  81   1      
+  82   1          RowA = 1;
+  83   1          RowB = 0;
+  84   1          RowC = 1;
+  85   1          RowD = 1; //Test Row B
+  86   1      
+  87   1          if (C1 == 0) { delay(50); while (C1 == 0); return 4; }
+  88   1          if (C2 == 0) { delay(50); while (C2 == 0); return 5; }
+  89   1          if (C3 == 0) { delay(50); while (C3 == 0); return 6; }
+  90   1          if (C4 == 0) { delay(50); while (C4 == 0); return 11;} //x
+  91   1      
+  92   1          RowA = 1;
+  93   1          RowB = 1;
+  94   1          RowC = 0;
+  95   1          RowD = 1; //Test Row C
+  96   1      
+  97   1          if (C1 == 0) { delay(50); while (C1 == 0); return 1; }
+  98   1          if (C2 == 0) { delay(50); while (C2 == 0); return 2; }
+  99   1          if (C3 == 0) { delay(50); while (C3 == 0); return 3; }
+ 100   1          if (C4 == 0) { delay(50); while (C4 == 0); return 12;} //sub
+ 101   1      
+ 102   1          RowA = 1;
+ 103   1          RowB = 1;
+ 104   1          RowC = 1;
+ 105   1          RowD = 0; //Test Row D
+ 106   1      
+ 107   1          if (C1 == 0) { delay(50); while (C1 == 0); return 13; }//C
+ 108   1          if (C2 == 0) { delay(50); while (C2 == 0); return 0;  }
+ 109   1          if (C3 == 0) { delay(50); while (C3 == 0); return 14; }//=
+ 110   1          if (C4 == 0) { delay(50); while (C4 == 0); return 15; }//+
+ 111   1      
+ 112   1          return -1; 
+ 113   1      }
+ 114          
+ 115          int get_pressed_key(void) 
+ 116          {
+C51 COMPILER V9.60.0.0   MAIN                                                              06/16/2020 13:10:06 PAGE 3   
+
+ 117   1          int key = -1;
+ 118   1          while (key == -1 )  
+ 119   1              key = read_keypad(); 
+ 120   1      
+ 121   1          return key;
+ 122   1      }
+ 123          
+ 124          int main(void)
+ 125          {
+ 126   1          int key;
+ 127   1      
+ 128   1          init();
+ 129   1          lcd_init();
+ 130   1      
+ 131   1          while (1)
+ 132   1          {
+ 133   2              key = get_pressed_key(); 
+ 134   2              writecmd(0x01);        // Clear screen
+ 135   2              switch(key){
+ 136   3                  case 1: send_msg("ONE");   break;
+ 137   3                  case 2: send_msg("TWO");   break;
+ 138   3                  case 3: send_msg("THREE"); break;
+ 139   3                  case 4: send_msg("FOUR");  break;
+ 140   3                  case 5: send_msg("FIVE");  break;
+ 141   3                  case 6: send_msg("SIX");   break;
+ 142   3                  case 7: send_msg("SEVEN"); break;
+ 143   3                  case 8: send_msg("EIGHT"); break;
+ 144   3                  case 9: send_msg("NINE");  break;
+ 145   3                  case 0: send_msg("ZERO");  break;
+ 146   3                  case 10: send_msg("DIV");  break;
+ 147   3                  case 11: send_msg("MUL");  break;
+ 148   3                  case 12: send_msg("SUB");  break;
+ 149   3                  case 13: send_msg("CLR");  break;
+ 150   3                  case 14: send_msg("EQL");  break;
+ 151   3                  case 15: send_msg("ADD");  break;
+ 152   3                      }
+ 153   2          }
+ 154   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    665    ----
+   CONSTANT SIZE    =     74    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
