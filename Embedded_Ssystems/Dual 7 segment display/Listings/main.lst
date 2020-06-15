@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C51 COMPILER V9.60.0.0   MAIN                                                              06/11/2020 07:21:31 PAGE 1   
 
 
@@ -54,3 +55,61 @@ END OF MODULE INFORMATION.
 
 
 C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+=======
+C51 COMPILER V9.60.0.0   MAIN                                                              06/11/2020 07:21:31 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include<reg51.h>
+   2          void delay(unsigned int t);
+   3          void main()
+   4          {
+   5   1      unsigned int ch[]={0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90};
+   6   1      unsigned int i,j;
+   7   1      P3=0xc0;
+   8   1      P2=0xc0;
+   9   1      
+  10   1      while(1)
+  11   1      {
+  12   2      for(j=0;j<10;j++) 
+  13   2      {
+  14   3      for(i=0;i<10;i++)
+  15   3      {
+  16   4      P3=ch[i];
+  17   4      delay(50);
+  18   4      }
+  19   3      if(j!=10)
+  20   3      P2=ch[j+1];
+  21   3      }
+  22   2      if(i==10&&j==10)
+  23   2      P3=0xc0;
+  24   2      P2=0xc0;
+  25   2      }
+  26   1      }
+  27          void delay(unsigned int t)
+  28          {
+  29   1      unsigned int i,j;
+  30   1      for(i=0;i<t;i++)
+  31   1      for(j=0;j<1275;j++);
+  32   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    162    ----
+   CONSTANT SIZE    =     20    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      24
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+>>>>>>> 203d94e6b79f6686b5bdeb11ca00b2a7fb7ae300

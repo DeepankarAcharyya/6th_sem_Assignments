@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 ".\Objects\STARTUP.obj",
 ".\Objects\main.obj" 
 TO ".\Objects\potentiometer_lcd_display" 
 PRINT(".\Listings\potentiometer_lcd_display.m51") RAMSIZE(256) 
+=======
+".\Objects\STARTUP.obj",
+".\Objects\main.obj" 
+TO ".\Objects\potentiometer_lcd_display" 
+PRINT(".\Listings\potentiometer_lcd_display.m51") RAMSIZE(256) 
+>>>>>>> 203d94e6b79f6686b5bdeb11ca00b2a7fb7ae300
